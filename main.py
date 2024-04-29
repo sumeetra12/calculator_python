@@ -1,8 +1,9 @@
 from tkinter import *
 from tkinter.messagebox import *
+import math as m
 
 # some useful variables
-font = ('Verdana', 22, 'bold')
+font = ('Verdana', 18, 'bold')
 
 
 # important functions
@@ -39,7 +40,7 @@ def click_btn_function(event):
 # creating a window
 window=Tk()
 window.title('My Calculator')
-window.geometry('500x650')
+window.geometry('450x575')
 
 
 # picture label
@@ -53,7 +54,7 @@ heading.pack(side=TOP)
 
 # textfield
 textField = Entry(window, font=font, justify= CENTER)
-textField.pack(side=TOP, pady=15, fill = X, padx = 15)
+textField.pack(side=TOP, pady=15, fill = X, padx = 20)
 
 # buttons
 buttonFrame = Frame(window)
@@ -105,6 +106,12 @@ multiplyBtn.bind('<Button-1>', click_btn_function)
 divideBtn.bind('<Button-1>', click_btn_function)
 equalBtn.bind('<Button-1>', click_btn_function)
 
+def enterClick(event):
+    e=Event()
+    e.widget = equalBtn
+    click_btn_function(e)
+
+textField.bind('<Return>', enterClick)
 
 # functions for scientific calculator
 scFrame = Frame(window)
@@ -115,7 +122,7 @@ sqrtBtn.grid(row=0, column=0, padx=5, pady=5)
 powBtn= Button(scFrame, text='^', font=font, width=5, relief='ridge', activebackground='orange', activeforeground='white')
 powBtn.grid(row=0, column=1, padx=5, pady=5)
 
-factBtn= Button(scFrame, text='X!', font=font, width=5, relief='ridge', activebackground='orange', activeforeground='white')
+factBtn= Button(scFrame, text='x!', font=font, width=5, relief='ridge', activebackground='orange', activeforeground='white')
 factBtn.grid(row=0, column=2, padx=5, pady=5)
 
 redBtn= Button(scFrame, text='toRad', font=font, width=5, relief='ridge', activebackground='orange', activeforeground='white')
@@ -134,8 +141,48 @@ cosBtn.grid(row=1, column=2, padx=5, pady=5)
 tanBtn= Button(scFrame, text='tanΘ', font=font, width=5, relief='ridge', activebackground='orange', activeforeground='white')
 tanBtn.grid(row=1, column=3, padx=5, pady=5)
 
-
 normalcalc = True
+
+def calculate_sc(event):
+    print('btn....')
+    btn=event.widget
+    text=btn['text']
+    print(text)
+    ex=textField.get()
+    if text == 'toDeg':
+        print('cal degree')
+        answer=str(m.degrees(float(ex)))
+    elif text == '^':
+        print('calculate power')
+        base,pow = ex.split(',')
+        print(base)
+        print(pow)
+        answer = m.pow(int(base), int(pow))
+    elif text == 'toRad':
+        print('calculate radians')
+        answer = str(m.radians(float(ex)))
+    elif text == 'x!':
+        print('calculate factorial')
+        answer = str(m.factorial(int(ex)))
+    elif text == 'sinΘ':
+        print('calculate sin')
+        answer = str(m.sin(m.radians(int(ex))))
+    elif text == 'cosΘ':
+        print('calculate cos')
+        answer = str(m.cos(m.radians(int(ex))))
+    elif text == 'tanΘ':
+        print('calculate tan')
+        answer = str(m.tan(m.radians(int(ex))))
+    elif text == '√':
+        print('calculate square root')
+        answer = str(m.sqrt(int(ex)))
+
+    textField.delete(0,END)
+    textField.insert(0,answer)
+
+
+
+
 def sc_click():
     global normalcalc
     if normalcalc:
@@ -143,7 +190,7 @@ def sc_click():
         # add sc frame
         scFrame.pack(side=TOP)
         buttonFrame.pack(side=TOP, pady=20)
-        window.geometry('500x750')
+        window.geometry('450x725')
 
         print('show sc')
         normalcalc = False
@@ -153,6 +200,18 @@ def sc_click():
         normalcalc = True
 
 # creating menu
+
+# binding sc buttons
+sqrtBtn.bind('<Button-1>', calculate_sc)
+powBtn.bind('<Button-1>', calculate_sc)
+factBtn.bind('<Button-1>', calculate_sc)
+redBtn.bind('<Button-1>', calculate_sc)
+degBtn.bind('<Button-1>', calculate_sc)
+sinBtn.bind('<Button-1>', calculate_sc)
+cosBtn.bind('<Button-1>', calculate_sc)
+tanBtn.bind('<Button-1>', calculate_sc)
+
+
 fontMenu = ('', 15)
 menuBar = Menu(window)
 
